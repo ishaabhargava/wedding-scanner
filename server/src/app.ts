@@ -44,6 +44,20 @@ app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/upload', uploadRoutes);
 
+// Root route for backend status verification
+app.get('/', (_req: Request, res: Response) => {
+  res.status(200).json({
+    status: 'online',
+    service: 'Wedding Photo-Sharing API Backend',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/public/health',
+      config: '/api/public/config',
+    },
+    message: 'Backend server is active and running successfully!',
+  });
+});
+
 // Serve static frontend build if present (for single-container/Render deployments)
 const clientDistPath = path.resolve(process.cwd(), '../client/dist');
 const localClientDist = path.resolve(process.cwd(), 'client-dist');

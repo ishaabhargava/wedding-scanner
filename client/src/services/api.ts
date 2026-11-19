@@ -1,6 +1,8 @@
 import { PublicConfig, AdminStats, WeddingSettings } from '../types';
 
-const API_BASE = '/api';
+// Supports VITE_API_BASE_URL (e.g. https://your-backend.onrender.com/api) or defaults to /api
+const envApiUrl = import.meta.env.VITE_API_BASE_URL;
+const API_BASE = envApiUrl ? envApiUrl.replace(/\/$/, '') : '/api';
 
 export const api = {
   // Public endpoints
