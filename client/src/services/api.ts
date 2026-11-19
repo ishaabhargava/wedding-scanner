@@ -4,14 +4,27 @@ import { PublicConfig, AdminStats, WeddingSettings } from '../types';
 const envApiUrl = import.meta.env.VITE_API_BASE_URL;
 const API_BASE = envApiUrl ? envApiUrl.replace(/\/$/, '') : '/api';
 
+// Helper for safe JSON parsing from fetch responses
+async function parseResponseJson(res: Response): Promise<any> {
+  const text = await res.text();
+  try {
+    return JSON.parse(text);
+  } catch {
+    if (text.includes('Protected by Vercel Authentication') || text.includes('sso-api')) {
+      throw new Error('Please use your public production domain (https://wedding-photos-7pvt.vercel.app)');
+    }
+    throw new Error(`Server response error (${res.status}): ${text.slice(0, 100) || res.statusText}`);
+  }
+}
+
 export const api = {
   // Public endpoints
   async getPublicConfig(): Promise<PublicConfig> {
     const res = await fetch(`${API_BASE}/public/config`);
+    const data = await parseResponseJson(res);
     if (!res.ok) {
-      throw new Error(`Failed to load wedding details (${res.status})`);
+      throw new Error(data.error || `Failed to load wedding details (${res.status})`);
     }
-    const data = await res.json();
     return data;
   },
 
@@ -78,7 +91,7 @@ export const api = {
       body: JSON.stringify({ password }),
     });
 
-    const data = await res.json();
+    const data = await parseResponseJson(res);
     if (!res.ok || !data.success) {
       throw new Error(data.error || 'Invalid administrator password');
     }
@@ -100,7 +113,7 @@ export const api = {
     const res = await fetch(`${API_BASE}/admin/stats`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    const data = await res.json();
+    const data = await parseResponseJson(res);
     if (!res.ok) throw new Error(data.error || 'Failed to fetch dashboard statistics');
     return data.stats;
   },
@@ -109,7 +122,7 @@ export const api = {
     const res = await fetch(`${API_BASE}/admin/settings`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    const data = await res.json();
+    const data = await parseResponseJson(res);
     if (!res.ok) throw new Error(data.error || 'Failed to fetch settings');
     return data.settings;
   },
@@ -123,7 +136,7 @@ export const api = {
       },
       body: JSON.stringify(settings),
     });
-    const data = await res.json();
+    const data = await parseResponseJson(res);
     if (!res.ok) throw new Error(data.error || 'Failed to update settings');
     return data.settings;
   },
@@ -132,7 +145,7 @@ export const api = {
     const res = await fetch(`${API_BASE}/auth/google/url`, {
       headers: { Authorization: `Bearer ${token}` },
     });
-    const data = await res.json();
+    const data = await parseResponseJson(res);
     if (!res.ok || !data.authUrl) throw new Error(data.error || 'Failed to initiate Google OAuth');
     return data.authUrl;
   },
@@ -142,7 +155,7 @@ export const api = {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
     });
-    const data = await res.json();
+    const data = await parseResponseJson(res);
     if (!res.ok) throw new Error(data.error || 'Failed to disconnect Google Drive');
   },
 
@@ -151,7 +164,7 @@ export const api = {
       method: 'POST',
       headers: { Authorization: `Bearer ${token}` },
     });
-    const data = await res.json();
+    const data = await parseResponseJson(res);
     return data;
   },
 
@@ -164,7 +177,7 @@ export const api = {
       },
       body: JSON.stringify({ folderName }),
     });
-    const data = await res.json();
+    const data = await parseResponseJson(res);
     if (!res.ok) throw new Error(data.error || 'Failed to create folder');
     return data.folder;
   },
