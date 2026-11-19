@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    background-color: #FAF8F5;
+    color: #2D2621;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, h4, .font-serif {
+    font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  }
+}
+
+/* Custom wedding decorative styles */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #B48F56 0%, #D8BE8E 50%, #9E7431 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-border-gradient {
+  border-image: linear-gradient(to right, #FAF0DE, #D5BD9C, #FAF0DE) 1;
+}
+
+.wedding-glass-card {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(229, 213, 191, 0.6);
+}
+
+/* Print Styles for QR code and table cards */
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .no-print {
+    display: none !important;
+  }
+
+  .print-only {
+    display: block !important;
+  }
+
+  .printable-card {
+    border: 2px solid #BC8F42 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    margin: 0 auto;
+    width: 100% !important;
+    max-width: 600px !important;
+  }
+}

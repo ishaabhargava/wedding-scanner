@@ -1,0 +1,26 @@
+{
+  "name": "wedding-scanner",
+  "version": "1.0.0",
+  "description": "Wedding Photo-Sharing Website with Google Drive Integration",
+  "scripts": {
+    "server": "cd server && npm run dev",
+    "client": "cd client && npm run dev",
+    "dev": "concurrently -n \"SERVER,CLIENT\" -c \"blue,magenta\" \"npm run server\" \"npm run client\"",
+    "build:client": "cd client && npm run build",
+    "build:server": "cd server && npm run build",
+    "build": "npm run build:client && npm run build:server",
+    "start": "cd server && npm start"
+  },
+  "keywords": [
+    "wedding",
+    "photo-sharing",
+    "google-drive",
+    "qr-code",
+    "guest-uploads"
+  ],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^9.1.2"
+  }
+}
